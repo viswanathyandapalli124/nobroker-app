@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Property Listing Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        form {
+            max-width: 800px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+<h2>Property Details Form</h2>
+<form th:action="@{/submitProperty}" th:object="${propertyDetails}" method="post">
+    <!-- Basic Info -->
+
+    <input type="hidden" name="userId" value="1" />
+
+    <label>Property Type:</label>
+    <input type="text" th:field="*{propertyType}" required/>
+
+    <label>Property Name:</label>
+    <input type="text" th:field="*{propertyName}" required/>
+
+    <label>BHK Type:</label>
+    <input type="number" th:field="*{bhkType}" min="1" required/>
+
+    <label>Floor:</label>
+    <input type="number" th:field="*{floor}" min="0" required/>
+
+    <label>Total Floors:</label>
+    <input type="number" th:field="*{totalFloors}" min="1" required/>
+
+    <label>Property Age (in years):</label>
+    <input type="number" th:field="*{propertyAge}" min="0" required/>
+
+    <label>Facing:</label>
+    <input type="text" th:field="*{facing}" required/>
+
+    <label>Built-up Area (sqft):</label>
+    <input type="number" th:field="*{buildUpArea}" step="0.01" required/>
+
+    <!-- Rent Info -->
+    <label>Available For:</label>
+    <input type="text" th:field="*{availableFor}" required/>
+
+    <label>Expected Rent (₹):</label>
+    <input type="number" th:field="*{expectedRent}" min="0" required/>
+
+    <label>Expected Deposit (₹):</label>
+    <input type="number" th:field="*{exceptedDeposit}" min="0" required/>
+
+    <label>
+        <input type="checkbox" th:field="*{negotiation1}"/>
+        Is Rent Negotiable?
+    </label>
+
+    <label>Available From:</label>
+    <input type="date" th:field="*{availableFrom}" required/>
+
+    <!-- Furnishing & Parking -->
+    <label>Furnishing:</label>
+    <select th:field="*{furnishing}" required>
+        <option value="" disabled selected>Select Furnishing</option>
+        <option value="Fully Furnished">Fully Furnished</option>
+        <option value="Semi Furnished">Semi Furnished</option>
+        <option value="Unfurnished">Unfurnished</option>
+    </select>
+
+    <label>Parking:</label>
+    <select th:field="*{parking}" required>
+        <option value="" disabled selected>Select Parking</option>
+        <option value="2 Wheeler">2 Wheeler</option>
+        <option value="4 Wheeler">4 Wheeler</option>
+        <option value="Both">Both</option>
+        <option value="No Parking">No Parking</option>
+    </select>
+
+    <label>Property Status:</label>
+    <input type="text" th:field="*{propertyStatus}" placeholder="e.g., Available / Sold / Occupied" required/>
+
+    <label>Description:</label>
+    <textarea th:field="*{description}" rows="4" required></textarea>
+
+    <!-- Location -->
+    <label>City:</label>
+    <input type="text" th:field="*{city}" required/>
+
+    <label>Locality:</label>
+    <input type="text" th:field="*{locality}" required/>
+
+    <label>Landmark:</label>
+    <input type="text" th:field="*{landmark}" />
+
+    <!-- Amenities -->
+    <label>Number of Bathrooms:</label>
+    <input type="number" th:field="*{bathrooms}" min="0" />
+
+    <label>Number of Balconies:</label>
+    <input type="number" th:field="*{balcony}" min="0" />
+
+    <label>Water Supply:</label>
+    <input type="text" th:field="*{waterSupply}" />
+
+    <label><input type="checkbox" th:field="*{petAllowed}"/> Pets Allowed</label>
+    <label><input type="checkbox" th:field="*{gym}"/> Gym</label>
+    <label><input type="checkbox" th:field="*{nonVeg}"/> Non-Veg Allowed</label>
+    <label><input type="checkbox" th:field="*{gatedSecurity}"/> Gated Security</label>
+    <label><input type="checkbox" th:field="*{lift}"/> Lift Available</label>
+    <label><input type="checkbox" th:field="*{gasPipeLine}"/> Gas Pipeline</label>
+    <label><input type="checkbox" th:field="*{airConditioner}"/> Air Conditioner</label>
+    <label><input type="checkbox" th:field="*{park}"/> Park Nearby</label>
+
+    <!-- Additional Info -->
+    <label>Show Property (Yes/No/Specific Time):</label>
+    <input type="text" th:field="*{showProperty}" />
+
+    <label>Property Condition:</label>
+    <input type="text" th:field="*{propertyCondition}" />
+
+    <label>Secondary Contact Number:</label>
+    <input type="text" th:field="*{secondaryNumber}" />
+
+    <label>Nearby Places (comma-separated):</label>
+    <input type="text" th:field="*{nearByPlace}" />
+
+    <!-- New Boolean Features -->
+    <label>House Keeping:</label>
+    <input type="checkbox" th:field="*{houseKeeping}" /><br/>
+
+    <label>Internet Service:</label>
+    <input type="checkbox" th:field="*{internetService}" /><br/>
+
+    <label>Power BackUp:</label>
+    <input type="checkbox" th:field="*{powerBackUp}" /><br/>
+
+    <label>Servant Room:</label>
+    <input type="checkbox" th:field="*{serventRoom}" /><br/>
+
+    <label>Swimming Pool:</label>
+    <input type="checkbox" th:field="*{swimmingPool}" /><br/>
+
+    <label>Fire Safety:</label>
+    <input type="checkbox" th:field="*{fireSafety}" /><br/>
+
+    <label>Upload Image:</label>
+    <input type="file" name="image"/><br/><br/>
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

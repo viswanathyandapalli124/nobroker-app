@@ -15,7 +15,11 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 
-    private String url;
+    private String imageName;
+    private String imageType;
+
+    @Lob
+    private byte[] imageData;
 
     @ManyToOne
     @JoinColumn(name = "property_id")

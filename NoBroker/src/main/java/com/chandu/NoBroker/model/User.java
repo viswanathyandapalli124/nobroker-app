@@ -33,6 +33,6 @@ public class User {
     )
     private Set<Property> bookmarkedProperties =  new HashSet<>();
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Property> properties = new HashSet<>();
 }

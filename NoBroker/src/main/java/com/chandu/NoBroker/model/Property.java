@@ -53,7 +53,7 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
     private Set<Photo> photos = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "property_amenities",
             joinColumns = @JoinColumn(name = "property_id"),
@@ -61,7 +61,7 @@ public class Property {
     )
     private Set<Amenity> amenities = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private Address address;
 
