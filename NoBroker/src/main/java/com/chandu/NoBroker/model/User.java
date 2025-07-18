@@ -1,0 +1,38 @@
+package com.chandu.NoBroker.model;
+
+import jakarta.persistence.*;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Getter
+@Setter
+@Table(name = "users")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+
+    private String name;
+    private String password;
+    private String email;
+    private String phone;
+    private String role;
+    private boolean isSubscribed;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "user_bookmarks",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "property_id")
+    )
+    private Set<Property> bookmarkedProperties =  new HashSet<>();
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Property> properties = new HashSet<>();
+}
