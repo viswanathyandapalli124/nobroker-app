@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class Property {
     private String availableFor;
     private long expectedRent;
     private long exceptedDeposit;
-    private boolean negotiation;
+    private Boolean negotiation;
 
     @Temporal(TemporalType.DATE)
     private Date availableFrom;
@@ -40,6 +41,10 @@ public class Property {
     private String furnishing;
     private String parking;
     private String propertyStatus;
+    private Long price;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isSale = true;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -53,13 +58,9 @@ public class Property {
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Photo> photos = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "property_amenities",
-            joinColumns = @JoinColumn(name = "property_id"),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id")
-    )
-    private Set<Amenity> amenities = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "amenity_id")
+    private Amenity amenity;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")

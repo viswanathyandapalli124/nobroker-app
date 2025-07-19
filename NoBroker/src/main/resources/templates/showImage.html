@@ -1,20 +1,125 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Property Details</title>
-</head>
-<body>
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
-<h1>Property Title</h1>
+export const PropertyFilters = () => {
+return (
+<div className="w-72 space-y-4">
+    {/* BHK Type */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">BHK Type</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+                {['1 RK', '1 BHK', '2 BHK', '3 BHK', '4 BHK', '4+ BHK'].map((bhk) => (
+                <Button key={bhk} variant="outline" size="sm" className="h-8">
+                    {bhk}
+                </Button>
+                ))}
+            </div>
+        </CardContent>
+    </Card>
 
-<p>Description goes here...</p>
+    {/* New Builder Projects */}
+    <Card>
+        <CardContent className="pt-4">
+            <div className="flex items-center space-x-2">
+                <Checkbox id="new-projects" />
+                <label
+                        htmlFor="new-projects"
+                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    New Builder Projects
+                </label>
+                <Badge variant="destructive" className="text-xs">
+                    New
+                </Badge>
+            </div>
+        </CardContent>
+    </Card>
 
-<h3>Property Images:</h3>
+    {/* Price Range */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">Price Range: ₹0 to ₹10 Cr</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <Slider
+                    defaultValue={[0, 10000000]}
+                    max={10000000}
+                    step={100000}
+                    className="w-full"
+            />
+        </CardContent>
+    </Card>
 
-<!-- Show multiple images -->
-<div th:each="photo : ${photos}">
-    <img th:src="@{/photos/{id}(id=${photo.photoId})}" alt="Property Image" width="400" height="300"/>
+    {/* Property Status */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">Property Status</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+            <div className="flex items-center space-x-2">
+                <Checkbox id="under-construction" />
+                <label htmlFor="under-construction" className="text-sm">Under Construction</label>
+            </div>
+            <div className="flex items-center space-x-2">
+                <Checkbox id="ready" defaultChecked />
+                <label htmlFor="ready" className="text-sm">Ready</label>
+            </div>
+        </CardContent>
+    </Card>
+
+    {/* Furnishing */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">Furnishing</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+            {['Full', 'Semi', 'None'].map((furnish) => (
+            <div key={furnish} className="flex items-center space-x-2">
+                <Checkbox id={furnish.toLowerCase()} />
+                <label htmlFor={furnish.toLowerCase()} className="text-sm">{furnish}</label>
+            </div>
+            ))}
+        </CardContent>
+    </Card>
+
+    {/* Property Type */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">Property Type</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+            {['Apartment', 'Independent House/Villa', 'Gated Community Villa', 'Standalone Building'].map((type) => (
+            <div key={type} className="flex items-center space-x-2">
+                <Checkbox id={type.toLowerCase().replace(/[^a-z0-9]/g, '-')} />
+                <label htmlFor={type.toLowerCase().replace(/[^a-z0-9]/g, '-')} className="text-sm">{type}</label>
+            </div>
+            ))}
+        </CardContent>
+    </Card>
+
+    {/* Parking */}
+    <Card>
+        <CardHeader className="pb-3">
+            <CardTitle className="text-base">Parking</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+            <div className="flex items-center space-x-2">
+                <Checkbox id="2-wheeler" />
+                <label htmlFor="2-wheeler" className="text-sm">2 Wheeler</label>
+            </div>
+            <div className="flex items-center space-x-2">
+                <Checkbox id="4-wheeler" />
+                <label htmlFor="4-wheeler" className="text-sm">4 Wheeler</label>
+            </div>
+        </CardContent>
+    </Card>
 </div>
-
-</body>
-</html>
+);
+};

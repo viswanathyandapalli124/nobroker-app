@@ -17,7 +17,7 @@ public class Amenity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long amenityId;
 
-    private Integer bathrooms;
+    private int bathrooms;
     private Integer balcony;
     private String waterSupply;
 
@@ -42,6 +42,6 @@ public class Amenity {
     private Boolean swimmingPool;
     private Boolean fireSafety;
 
-    @ManyToMany(mappedBy = "amenities")
+    @OneToMany(mappedBy = "amenity")
     private Set<Property> properties = new HashSet<>();
 }

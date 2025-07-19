@@ -17,13 +17,9 @@ public class Photo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 
-    private String imageName;
-    private String imageType;
+    private String imageUrl;
 
-    @Lob
-    private byte[] imageData;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "property_id")
     private Property property;
 }

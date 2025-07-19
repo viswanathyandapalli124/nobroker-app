@@ -1,5 +1,6 @@
 package com.chandu.NoBroker.controller;
 
+import com.chandu.NoBroker.DTO.AllPostDTO;
 import com.chandu.NoBroker.DTO.PropertyDetailsDTO;
 import com.chandu.NoBroker.service.PropertyService;
 
@@ -27,6 +28,7 @@ public class PropertyController {
     public String addProperty(@RequestParam("userId") Long userId, @ModelAttribute PropertyDetailsDTO propertyDetailsDTO,
                               Model model) {
         model.addAttribute("propertyId", propertyService.sageProperty(userId, propertyDetailsDTO).getPropertyId());
+
         return "check";
     }
 
@@ -35,5 +37,20 @@ public class PropertyController {
                              @RequestParam("file") MultipartFile[] propertyImages) {
         propertyService.saveImage(propertyId, propertyImages);
         return  "success";
+    }
+
+    @GetMapping("/getAllPropertiesList")
+    public String getAllPropertyList(Model model) {
+        model.addAttribute("allProperties", propertyService.getAllProperties());
+
+        return "allPosts";
+    }
+
+    @GetMapping("property/{propertyId}")
+    public String getPropertyById(@PathVariable("propertyId") Long propertyId, Model model) {
+        model.addAttribute("propertyId", propertyId);
+        model.addAttribute("property", propertyService.getPropertyById(propertyId));
+
+        return "fullPost";
     }
 }

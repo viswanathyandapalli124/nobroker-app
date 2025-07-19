@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Property Filters & Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .filter-sidebar {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .filter-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .filter-card h3 {
+            font-size: 16px;
+            margin-bottom: 0.75rem;
+        }
+
+        .checkbox-group,
+        .button-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .button-grid button {
+            padding: 4px 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .property-list {
+            flex-grow: 1;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .property-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .property-card img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 6px;
+            margin: 5px;
+        }
+
+        .property-card h4 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .property-meta {
+            font-size: 14px;
+            color: #555;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Filters Sidebar -->
+<div class="filter-sidebar">
+
+    <div class="filter-card">
+        <h3>BHK Type</h3>
+        <div class="button-grid">
+            <button>1 RK</button>
+            <button>1 BHK</button>
+            <button>2 BHK</button>
+            <button>3 BHK</button>
+            <button>4 BHK</button>
+            <button>4+ BHK</button>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <div class="checkbox-group">
+            <input type="checkbox" id="new-builder">
+            <label for="new-builder">New Builder Projects</label>
+            <span style="color: red; font-size: 12px;">New</span>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <h3>Property Status</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="under-construction">
+            <label for="under-construction">Under Construction</label>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="ready" checked>
+            <label for="ready">Ready</label>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <h3>Furnishing</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="full"><label for="full">Full</label><br>
+            <input type="checkbox" id="semi"><label for="semi">Semi</label><br>
+            <input type="checkbox" id="none"><label for="none">None</label>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <h3>Property Type</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="apartment"><label for="apartment">Apartment</label><br>
+            <input type="checkbox" id="villa"><label for="villa">Independent House/Villa</label><br>
+            <input type="checkbox" id="gated-villa"><label for="gated-villa">Gated Community Villa</label><br>
+            <input type="checkbox" id="standalone"><label for="standalone">Standalone Building</label>
+        </div>
+    </div>
+
+    <div class="filter-card">
+        <h3>Parking</h3>
+        <div class="checkbox-group">
+            <input type="checkbox" id="2w"><label for="2w">2 Wheeler</label><br>
+            <input type="checkbox" id="4w"><label for="4w">4 Wheeler</label>
+        </div>
+    </div>
+
+</div>
+
+<!-- Properties List -->
+<div class="property-list">
+    <div th:each="property : ${allProperties}" class="property-card">
+        <h4 th:text="${property.title}"></h4>
+        <p th:text="${property.description}"></p>
+        <div class="property-meta">
+            <p>₹ <span th:text="${property.price}"></span></p>
+            <p>Price per Sqft: ₹ <span th:text="${property.pricePerSqft}"></span></p>
+            <p>Area: <span th:text="${property.buildUpAre}"></span> sqft</p>
+            <p>Facing: <span th:text="${property.facing}"></span></p>
+            <p>BHK: <span th:text="${property.bhkType}"></span></p>
+            <p>Bathrooms: <span th:text="${property.bathrooms}"></span></p>
+            <p>Parking: <span th:text="${property.parking}"></span></p>
+        </div>
+        <div>
+            <img th:each="img : ${property.images}"
+                 th:src="${img.imageUrl}"
+                 alt="Property Image">
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,14 +1,22 @@
 package com.chandu.NoBroker.service;
 
+import com.chandu.NoBroker.DTO.AllPostDTO;
+import com.chandu.NoBroker.DTO.FullPostDTO;
 import com.chandu.NoBroker.DTO.PropertyDetailsDTO;
 import com.chandu.NoBroker.model.*;
 import com.chandu.NoBroker.repository.*;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class PropertyService {
@@ -21,6 +29,9 @@ public class PropertyService {
 
     @Autowired
     private PhotosRepository photosRepository;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     public Property sageProperty(Long userId, PropertyDetailsDTO dto) {
         User user = userRepository.findById(userId).orElse(null);
@@ -72,7 +83,7 @@ public class PropertyService {
         amenity.setSwimmingPool(dto.getSwimmingPool());
         amenity.setFireSafety(dto.getFireSafety());
 
-        property.getAmenities().add(amenity);
+        property.setAmenity(amenity);
 
         property.setOwner(user);
 
@@ -99,25 +110,105 @@ public class PropertyService {
 
     public void saveImage(Long propertyId, MultipartFile[] propertyImages) {
         Property property = propertyRepository.findById(propertyId).orElse(null);
-        Photo photos;
+        if (property == null) return;
 
         for (MultipartFile multipartFile : propertyImages) {
-            photos = new Photo();
-
             try {
-                photos.setImageData(multipartFile.getBytes());
+                // Upload to Cloudinary
+                Map<?, ?> uploadResult = cloudinary.uploader().upload(
+                        multipartFile.getBytes(),
+                        ObjectUtils.emptyMap()
+                );
+
+                String imageUrl = uploadResult.get("secure_url").toString();
+
+                Photo photo = new Photo();
+                photo.setImageUrl(imageUrl);
+                photo.setProperty(property);
+
+                photosRepository.save(photo);
+
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Image upload failed", e);
             }
+        }
+    }
 
-            photos.setImageType(multipartFile.getContentType());
-            photos.setImageName(multipartFile.getOriginalFilename());
 
-            photos.setProperty(property);
+    public Set<AllPostDTO> getAllProperties() {
+        List<Property> properties = propertyRepository.findAll();
+        Set<AllPostDTO> allPostDTOS = new HashSet<>();
 
-            property.getPhotos().add(photos);
+        for(Property property : properties) {
+            AllPostDTO allPostDTO = new AllPostDTO();
+            allPostDTO.setTitle(property.getBhkType() + " BHK " + property.getPropertyType() + " In " +" "+
+                    property.getPropertyName() +" For " + ((property.getIsSale())? "Sale" : "Rent") +
+                    " in " + property.getAddress().getLocality());
+
+            allPostDTO.setDescription(property.getAddress().getLandmark()+ " " +
+                    property.getAddress().getLocality() + " " + property.getAddress().getCity());
+
+            allPostDTO.setPrice(0L);
+            allPostDTO.setPricePerSqft((long)(0 / property.getBuildUpArea()));
+
+            allPostDTO.setBuildUpAre(property.getBuildUpArea());
+            allPostDTO.setFacing(property.getFacing());
+            allPostDTO.setBhkType(property.getBhkType());
+            allPostDTO.setBathrooms(property.getAmenity().getBathrooms());
+            allPostDTO.setParking(property.getParking());
+
+            allPostDTO.setImages(property.getPhotos());
+
+            allPostDTOS.add(allPostDTO);
         }
 
-        propertyRepository.save(property);
+        return allPostDTOS;
+    }
+
+    public FullPostDTO getPropertyById(Long propertyId) {
+
+        Property property =  propertyRepository.findById(propertyId).orElse(null);
+
+        FullPostDTO fullPostDTO = new FullPostDTO();
+
+        fullPostDTO.setTitle(property.getBhkType() + "BHK Flat in " + property.getPropertyName() + "For Rent " + property.getAddress().getLandmark());
+        fullPostDTO.setAddress(property.getAddress().getLandmark()+ " " +
+                property.getAddress().getLocality() + " " + property.getAddress().getCity());
+
+        fullPostDTO.setPrice(property.getPrice());
+        fullPostDTO.setIsSale(property.getIsSale());
+        fullPostDTO.setBuildUpArea(property.getBuildUpArea());
+        fullPostDTO.setExpectedDeposit(property.getExceptedDeposit());
+        fullPostDTO.setBedroom(property.getAmenity().getBathrooms());
+        fullPostDTO.setPropertyType(property.getPropertyType());
+        fullPostDTO.setFloor(property.getFloor());
+        fullPostDTO.setAvailabilityFrom(property.getAvailableFrom());
+        fullPostDTO.setParking(property.getParking());
+        fullPostDTO.setPropertyAge(property.getPropertyAge());
+        fullPostDTO.setBalcony(property.getAmenity().getBalcony());
+        fullPostDTO.setCreatedAt(property.getCreatedAt());
+
+        fullPostDTO.setFurnishing(property.getFurnishing());
+        fullPostDTO.setFacing(property.getFacing());
+        fullPostDTO.setWaterSupply(property.getAmenity().getWaterSupply());
+        fullPostDTO.setTotalFloors(property.getTotalFloors());
+        fullPostDTO.setBathrooms(property.getAmenity().getBathrooms());
+        fullPostDTO.setPetAllowed(property.getAmenity().getPetAllowed());
+        fullPostDTO.setNonVegAllowed(property.getAmenity().getNonVeg());
+        fullPostDTO.setGatedSecurity(property.getAmenity().getGatedSecurity());
+
+        fullPostDTO.setDescription(property.getDescription());
+        fullPostDTO.setLift(property.getAmenity().getLift());
+        fullPostDTO.setGasPipeLine(property.getAmenity().getGasPipeLine());
+        fullPostDTO.setAirConditioner(property.getAmenity().getAirConditioner());
+        fullPostDTO.setPark(property.getAmenity().getPark());
+        fullPostDTO.setHouseKeeping(property.getAmenity().getHouseKeeping());
+        fullPostDTO.setInternetService(property.getAmenity().getInternetService());
+        fullPostDTO.setPowerBackUp(property.getAmenity().getPowerBackUp());
+        fullPostDTO.setServentRoom(property.getAmenity().getServentRoom());
+        fullPostDTO.setSwimmingPool(property.getAmenity().getSwimmingPool());
+        fullPostDTO.setFireSafety(property.getAmenity().getFireSafety());
+
+        return fullPostDTO;
     }
 }
