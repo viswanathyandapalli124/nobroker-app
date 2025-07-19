@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Property Details</title>
+</head>
+<body>
+
+<h1>Property Title</h1>
+
+<p>Description goes here...</p>
+
+<h3>Property Images:</h3>
+
+<!-- Show multiple images -->
+<div th:each="photo : ${photos}">
+    <img th:src="@{/photos/{id}(id=${photo.photoId})}" alt="Property Image" width="400" height="300"/>
+</div>
+
+</body>
+</html>

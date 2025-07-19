@@ -6,6 +6,9 @@ import com.chandu.NoBroker.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public class PropertyService {
@@ -16,7 +19,10 @@ public class PropertyService {
     @Autowired
     private UserRepository userRepository;
 
-    public void sageProperty(Long userId,PropertyDetailsDTO dto) {
+    @Autowired
+    private PhotosRepository photosRepository;
+
+    public Property sageProperty(Long userId, PropertyDetailsDTO dto) {
         User user = userRepository.findById(userId).orElse(null);
 
         Property property = new Property();
@@ -69,6 +75,48 @@ public class PropertyService {
         property.getAmenities().add(amenity);
 
         property.setOwner(user);
+
+        return propertyRepository.save(property);
+    }
+
+//    public void addImage(MultipartFile[] file, Property property) throws IOException {
+//        Photo photos;
+//
+//        for (MultipartFile multipartFile : file) {
+//            photos = new Photo();
+//
+//            try {
+//                photos.setImageData(multipartFile.getBytes());
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            photos.setImageType(multipartFile.getContentType());
+//            photos.setImageName(multipartFile.getOriginalFilename());
+//
+//            photos.setProperty(property);
+//        }
+//    }
+
+    public void saveImage(Long propertyId, MultipartFile[] propertyImages) {
+        Property property = propertyRepository.findById(propertyId).orElse(null);
+        Photo photos;
+
+        for (MultipartFile multipartFile : propertyImages) {
+            photos = new Photo();
+
+            try {
+                photos.setImageData(multipartFile.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            photos.setImageType(multipartFile.getContentType());
+            photos.setImageName(multipartFile.getOriginalFilename());
+
+            photos.setProperty(property);
+
+            property.getPhotos().add(photos);
+        }
 
         propertyRepository.save(property);
     }

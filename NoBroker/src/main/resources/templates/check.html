@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload Property Images</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 400px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Upload Images for Property</h2>
+
+<form th:action="@{'/image/' + ${propertyId}}" method="post" enctype="multipart/form-data">
+    <label for="file">Select Images:</label>
+    <input type="file" name="file" multiple required>
+
+    <button type="submit">Upload Images</button>
+</form>
+
+</body>
+</html>

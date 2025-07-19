@@ -50,7 +50,7 @@ public class Property {
     @ManyToMany(mappedBy = "bookmarkedProperties")
     private Set<User> bookmarkedByUsers = new HashSet<>();
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Photo> photos = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.PERSIST)
