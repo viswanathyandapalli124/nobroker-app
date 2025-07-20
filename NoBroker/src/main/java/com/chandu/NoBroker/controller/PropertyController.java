@@ -22,13 +22,49 @@ public class PropertyController {
     @Autowired
     PropertyService propertyService;
 
-//    @GetMapping("/")
-//    public String index(Model model) {
-//        model.addAttribute("propertyDetails", new PropertyDetailsDTO());
-//        model.addAttribute("userId", 1);
-//
-//        return "index";
-//    }
+    @GetMapping("/")
+    public String index(Model model) {
+        model.addAttribute("propertyDetails", new PropertyDetailsDTO());
+        model.addAttribute("userId", 1);
+
+        return "index";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PostMapping("/submitProperty")
     public String addProperty(@RequestParam("userId") Long userId, @ModelAttribute PropertyDetailsDTO propertyDetailsDTO,
