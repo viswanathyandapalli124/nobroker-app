@@ -48,6 +48,10 @@
     <li>Swimming Pool: <span th:text="${property.swimmingPool ? 'Yes' : 'No'}"></span></li>
     <li>Fire Safety: <span th:text="${property.fireSafety ? 'Yes' : 'No'}"></span></li>
 </ul>
-
+<div>
+    <img th:each="img : ${property.images}"
+         th:src="${img.imageUrl}"
+         alt="Property Image">
+</div>
 </body>
 </html>

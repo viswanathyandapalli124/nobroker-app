@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="cardList">
+    <div th:each="property : ${properties}" class="property-card">
+        <div class="property-image">
+            <img th:if="${property.images != null and !property.images.isEmpty()}"
+                 th:src="${property.images[0].imageUrl}" alt="Property Image" />
+        </div>
+        <div class="property-details">
+            <h4 th:text="${property.title}"></h4>
+            <p th:text="${property.description}"></p>
+            <p>₹ <span th:text="${property.price}"></span></p>
+            <p>Price/Sqft: ₹ <span th:text="${property.pricePerSqft}"></span></p>
+            <p>Area: <span th:text="${property.buildUpAre}"></span> sqft</p>
+            <p>Facing: <span th:text="${property.facing}"></span></p>
+            <p>BHK: <span th:text="${property.bhkType}"></span></p>
+            <p>Bathrooms: <span th:text="${property.bathrooms}"></span></p>
+            <p>Parking: <span th:text="${property.parking}"></span></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

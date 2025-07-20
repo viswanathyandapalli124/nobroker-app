@@ -519,72 +519,67 @@
             <div th:each="property : ${allProperties}"
                  style="border:1px solid #ccc; border-radius:10px; padding:16px; margin-bottom:20px; background:#fff; font-family:Arial, sans-serif; width:70%;">
 
-                <!-- ✅ Title and Address -->
+                <!-- Title and Address -->
                 <div style="margin-bottom:10px;">
-                    <h3 style="margin:0; font-size:20px;"
-                        th:text="${property.bhkType + ' BHK Flat in ' + property.propertyName + ' For Rent at ' + property.address.landmark}">
-                        Property Title
-                    </h3>
+                    <h3 style="margin:0; font-size:20px;" th:text="${property.title}">Property Title</h3>
                     <p style="margin:4px 0; color:#555;">
                         <span th:text="${property.description}">Property Description</span>
                         <a href="#" style="color:#007bff; text-decoration:none; margin-left:10px;">🔍 Explore Nearby</a>
                     </p>
                 </div>
 
-                <!-- ✅ Price, EMI, Area -->
+                <!-- Price, EMI, Area -->
                 <div style="display:flex; gap:20px; margin-bottom:16px;">
-
-                    <!-- ✅ Price -->
-                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px;">
-                        <p style="margin:0; font-size:16px; font-weight:bold;">
-                <span th:if="${property.price != null}"
-                      th:text="'₹ ' + #numbers.formatDecimal(property.price * 1000, 0, 'POINT', 2, 'ZERO')">₹ 0.00</span>
-                            <span th:unless="${property.price != null}">N/A</span>
+                    <!-- Price -->
+                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px; display:flex; flex-direction:column; justify-content:center; height:80px;">
+                        <p style="margin:0; font-size:18px; font-weight:bold; color:#222;">
+                            ₹<span th:text="${property.price}">84</span> INR
                         </p>
-
-                        <p style="margin:0; font-size:14px;">
-                <span th:if="${property.price != null and property.buildUpArea != null and property.buildUpArea > 0}"
-                      th:text="'₹ ' + #numbers.formatDecimal(property.price / property.buildUpArea, 0, 'POINT', 2, 'ZERO') + ' per sq.ft.'">₹ 0.00 per sq.ft.</span>
-                            <span th:unless="${property.price != null and property.buildUpArea != null and property.buildUpArea > 0}">N/A</span>
+                        <p style="margin:0; font-size:14px; color:#555;">
+                            ₹<span th:text="${property.pricePerSqft}">7,636</span> per sq.ft.
                         </p>
                     </div>
 
-                    <!-- ✅ EMI -->
-                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px;">
-                        <p style="margin:0; font-size:16px; font-weight:bold;">
-                <span th:if="${property.price != null}"
-                      th:text="'₹ ' + #numbers.formatDecimal(property.price * 1000, 0, 'POINT', 2, 'ZERO')">₹ 0.00</span>
-                            <span th:unless="${property.price != null}">N/A</span>
+                    <!-- EMI -->
+                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px; display:flex; flex-direction:column; justify-content:center; height:80px;">
+                        <p style="margin:0; font-size:16px; font-weight:bold; color:#222;">
+                            ₹<span th:text="${property.price != null ? (property.price * 1000) : '48144'}">48,144</span>/Month
                         </p>
-                        <p style="margin:0; font-size:14px;">Estimated EMI</p>
+                        <p style="margin:0; font-size:14px; color:#555;">Estimated EMI</p>
                     </div>
 
-                    <!-- ✅ Area -->
-                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px;">
-                        <p style="margin:0; font-size:16px; font-weight:bold;">
-                            <span th:if="${property.buildUpArea != null}" th:text="${property.buildUpArea + ' sqft'}">0 sqft</span>
-                            <span th:unless="${property.buildUpArea != null}">N/A</span>
+                    <!-- Area -->
+                    <div style="flex:1; border:1px solid #ddd; border-radius:6px; padding:10px; display:flex; flex-direction:column; justify-content:center; height:80px;">
+                        <p style="margin:0; font-size:16px; font-weight:bold; color:#222;">
+                            <span th:text="${property.buildUpAre}">1100</span> sqft
                         </p>
-                        <p style="margin:0; font-size:14px;">Built-up Area</p>
+                        <p style="margin:0; font-size:14px; color:#555;">Built-up Area</p>
                     </div>
                 </div>
 
-                <!-- ✅ Image and Details Section -->
+                <!-- Image and Details Section -->
                 <div style="display:flex; align-items:flex-start; gap:20px;">
-                    <!-- ✅ Image -->
+
+                    <!-- Left: Image (same width as price box) -->
                     <div style="position:relative; width:calc((100% - 40px)/3); height:180px;">
-                        <img th:src="${property.photos != null and !property.photos.isEmpty() ? property.photos.iterator().next().imageUrl : 'https://via.placeholder.com/200x180'}" width="200" height="180">
-                        <div th:if="${property.photos != null and property.photos.size() > 1}"
+                        <img th:src="${property.images != null and !property.images.isEmpty() ? property.images[0].imageUrl : 'https://via.placeholder.com/200x180'}"
+                             alt="Property Image"
+                             style="width:100%; height:180px; object-fit:cover; border-radius:8px;" />
+                        <div style="position:absolute; top:8px; right:8px; background:white; border-radius:50%; padding:4px; font-size:16px;">♡</div>
+                        <div th:if="${property.images != null and property.images.size() > 1}"
                              style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.6); color:white; padding:2px 6px; font-size:12px; border-radius:6px;"
-                             th:text="${property.photos.size()} + '/' + ${property.photos.size()}">2/2
+                             th:text="${property.images.size()} + '/' + ${property.images.size()}">
+                            2/2
                         </div>
                     </div>
 
-                    <!-- ✅ Property Features -->
+                    <!-- Right Side Details -->
                     <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; height:180px;">
+
+                        <!-- Specifications Grid -->
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <!-- ✅ Facing -->
-                            <div style="display:flex; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
+                            <!-- Facing -->
+                            <div style="display:flex; align-items:center; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
                                 <div style="font-size:24px;">🧭</div>
                                 <div>
                                     <p style="margin:0; font-weight:bold;" th:text="${property.facing}">East</p>
@@ -592,48 +587,47 @@
                                 </div>
                             </div>
 
-                            <!-- ✅ BHK -->
-                            <div style="display:flex; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
+                            <!-- BHK -->
+                            <div style="display:flex; align-items:center; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
                                 <div style="font-size:24px;">🏠</div>
                                 <div>
-                                    <p style="margin:0;" th:text="${property.bhkType} + ' BHK'">2 BHK</p>
+                                    <p style="margin:0;"><span th:text="${property.bhkType}">2</span> BHK</p>
                                     <p style="margin:0; font-size:12px; color:#555;">Apartment Type</p>
                                 </div>
                             </div>
 
-                            <!-- ✅ Bathrooms -->
-                            <div style="display:flex; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
+                            <!-- Bathrooms -->
+                            <div style="display:flex; align-items:center; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
                                 <div style="font-size:24px;">🚿</div>
                                 <div>
-                                    <p style="margin:0;" th:text="${property.amenity.bathrooms}">2</p>
+                                    <p style="margin:0;" th:text="${property.bathrooms}">2</p>
                                     <p style="margin:0; font-size:12px; color:#555;">Bathrooms</p>
                                 </div>
                             </div>
 
-                            <!-- ✅ Parking -->
-                            <div style="display:flex; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
+                            <!-- Parking -->
+                            <div style="display:flex; align-items:center; gap:10px; border:1px solid #ddd; padding:8px; border-radius:6px;">
                                 <div style="font-size:24px;">🅿️</div>
                                 <div>
-                                    <p style="margin:0;" th:text="${property.parking}">Car</p>
+                                    <p style="margin:0;" th:text="${property.parking}">Bike and Car</p>
                                     <p style="margin:0; font-size:12px; color:#555;">Parking</p>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- ✅ Buttons -->
+                        <!-- Actions -->
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                            <button style="padding:6px 14px; background:#00aa9b; color:white; border:none; border-radius:6px;">
+                            <button style="padding:6px 14px; background:#00aa9b; color:white; border:none; border-radius:6px; cursor:pointer; font-size:14px;">
                                 Get Owner Details
                             </button>
                             <div style="display:flex; gap:10px; font-size:18px; color:#888;">
-                                <span>♡</span>
-                                <span>📋</span>
+                                <span style="cursor:pointer;">♡</span>
+                                <span style="cursor:pointer;">📋</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

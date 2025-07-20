@@ -1,11 +1,14 @@
 package com.chandu.NoBroker.DTO;
 
+import com.chandu.NoBroker.model.Photo;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
+import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -54,4 +57,6 @@ public class FullPostDTO {
     private Boolean serventRoom;
     private Boolean swimmingPool;
     private Boolean fireSafety;
+
+    private Set<Photo> images;
 }

@@ -9,14 +9,13 @@ import com.chandu.NoBroker.repository.*;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PropertyService {
@@ -53,6 +52,7 @@ public class PropertyService {
         property.setParking(dto.getParking());
         property.setPropertyStatus(dto.getPropertyStatus());
         property.setDescription(dto.getDescription());
+        property.setNegotiation(true);
 
         Address address = new Address();
         address.setCity(dto.getCity());
@@ -90,24 +90,6 @@ public class PropertyService {
         return propertyRepository.save(property);
     }
 
-//    public void addImage(MultipartFile[] file, Property property) throws IOException {
-//        Photo photos;
-//
-//        for (MultipartFile multipartFile : file) {
-//            photos = new Photo();
-//
-//            try {
-//                photos.setImageData(multipartFile.getBytes());
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//            photos.setImageType(multipartFile.getContentType());
-//            photos.setImageName(multipartFile.getOriginalFilename());
-//
-//            photos.setProperty(property);
-//        }
-//    }
-
     public void saveImage(Long propertyId, MultipartFile[] propertyImages) {
         Property property = propertyRepository.findById(propertyId).orElse(null);
         if (property == null) return;
@@ -135,7 +117,7 @@ public class PropertyService {
     }
 
 
-    public Set<AllPostDTO> getAllProperties() {
+    public List<Property> getAllProperties() {
         List<Property> properties = propertyRepository.findAll();
         Set<AllPostDTO> allPostDTOS = new HashSet<>();
 
@@ -162,7 +144,7 @@ public class PropertyService {
             allPostDTOS.add(allPostDTO);
         }
 
-        return allPostDTOS;
+        return properties;
     }
 
     public FullPostDTO getPropertyById(Long propertyId) {
@@ -208,7 +190,15 @@ public class PropertyService {
         fullPostDTO.setServentRoom(property.getAmenity().getServentRoom());
         fullPostDTO.setSwimmingPool(property.getAmenity().getSwimmingPool());
         fullPostDTO.setFireSafety(property.getAmenity().getFireSafety());
+        fullPostDTO.setImages(property.getPhotos());
 
         return fullPostDTO;
+    }
+
+    public Page<Property> getPaginatedProperties(Pageable pageable) {
+
+        Page<Property> propertyPage = propertyRepository.findAll(pageable);
+
+        return propertyPage;
     }
 }

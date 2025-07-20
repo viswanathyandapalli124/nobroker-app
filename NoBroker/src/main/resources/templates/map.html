@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Property Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .property-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .property-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+        }
+
+        .property-card h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #007BFF;
+        }
+
+        .property-card p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<h1>Available Properties</h1>
+
+<div class="property-container" id="propertyContainer">
+    <!-- Cards will be appended here -->
+</div>
+
+<div class="loader" id="loader">Loading...</div>
+
+<script>
+    let page = 0;
+    let loading = false;
+
+    async function loadProperties() {
+        if (loading) return;
+        loading = true;
+
+        const response = await fetch(`/api/properties?page=${page}&size=6`);
+        const data = await response.json();
+
+        const container = document.getElementById("propertyContainer");
+
+        if (data.length === 0) {
+            document.getElementById("loader").textContent = "No more properties.";
+            observer.disconnect();
+            return;
+        }
+
+        data.forEach(property => {
+            const card = document.createElement("div");
+            card.className = "property-card";
+            card.innerHTML = `
+                <h2>${property.propertyName}</h2>
+                <p><strong>Type:</strong> ${property.propertyType}</p>
+                <p><strong>BHK:</strong> ${property.bhkType}</p>
+                <p><strong>Floor:</strong> ${property.floor} / ${property.totalFloors}</p>
+                <p><strong>Facing:</strong> ${property.facing}</p>
+                <p><strong>Build-up Area:</strong> ${property.buildUpArea} sq.ft</p>
+                <p><strong>Rent:</strong> ₹${property.expectedRent}</p>
+                <p><strong>Available For:</strong> ${property.availableFor}</p>
+            `;
+            container.appendChild(card);
+        });
+
+        page++;
+        loading = false;
+    }
+
+    // Intersection Observer to detect scroll end
+    const observer = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+            loadProperties();
+        }
+    });
+
+    observer.observe(document.getElementById("loader"));
+
+    // Load first page
+    loadProperties();
+</script>
+</body>
+</html>

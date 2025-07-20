@@ -33,6 +33,8 @@ public class Property {
     private String availableFor;
     private long expectedRent;
     private long exceptedDeposit;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean negotiation;
 
     @Temporal(TemporalType.DATE)
@@ -52,7 +54,7 @@ public class Property {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToMany(mappedBy = "bookmarkedProperties")
+    @ManyToMany(mappedBy = "bookmarkedProperties", cascade = CascadeType.ALL)
     private Set<User> bookmarkedByUsers = new HashSet<>();
 
     @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
